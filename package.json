@@ -1,0 +1,21 @@
+{
+  "name": "minimal-react-babel-template",
+  "version": "1.0.0",
+  "description": "Minimal React + Babel + Webpack template",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
+  },
+  "author": "Yeray Diaz Diaz",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/preset-react": "^7.13.13",
+    "babel-loader": "^8.2.2",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12"
+  }
+}
