@@ -11,6 +11,8 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: 'nix-shell --run "npm install; npm run build"'
+    - name: "ls dist"
+      run: ls dist
     - uses: actions/upload-artifact@v2
       with:
         name: dist
@@ -23,6 +25,8 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: dist
+    - name: "ls dist"
+      run: ls dist
     - uses: actions/checkout@master
     - uses: jakejarvis/s3-sync-action@master
       with:
