@@ -31,7 +31,7 @@ jobs:
     - name: docker push
       run: |
         echo ${{ steps.token_step.outputs.token }} | docker login -u oauth2accesstoken --password-stdin https://gcr.io
-        docker tag ${{ steps.token_step.outputs.token }} gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
+        docker tag ${{ steps.build_image.outputs.image_id }} gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
         docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
     - name: show docker image name
       run: |
