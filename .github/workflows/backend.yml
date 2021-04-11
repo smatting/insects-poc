@@ -11,8 +11,8 @@ jobs:
     - uses: cachix/install-nix-action@v13
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - run: 'cd backend; ./buildimage.sh'
-    - name "gcloud info"
+    - run: cd backend; ./buildimage.sh
+    - name: gcloud info
       uses: actions-hub/gcloud@master
       environment: develop
       env:
@@ -20,7 +20,7 @@ jobs:
           APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
       with:
         args: info
-    - name "gcloud auth configure-docker"
+    - name: gcloud auth configure-docker
       uses: actions-hub/gcloud@master
       environment: develop
       env:
