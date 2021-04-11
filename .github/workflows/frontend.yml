@@ -12,7 +12,7 @@ jobs:
     - uses: cachix/install-nix-action@v13
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - run: 'nix-shell --run "npm install; npm run build"'
+    - run: 'cd frontend; nix-shell --run "npm install; npm run build"'
     - uses: actions/upload-artifact@v2
       with:
         name: dist

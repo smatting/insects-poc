@@ -1,4 +1,4 @@
-let pkgs = import ./pkgs.nix {}; in
+let pkgs = import ../pkgs.nix {}; in
 
 with pkgs;
 
