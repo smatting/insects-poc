@@ -46,7 +46,7 @@ jobs:
     - name: gcloud deploy
       uses: actions-hub/gcloud@master
       with:
-        args: run deploy --platform managed --region europe-west3 srv --image ${{ jobs.build_backend.outputs.image_id }}
+        args: run deploy --platform managed --region europe-west3 srv --image ${{ needs.build_backend.outputs.image_id }}
       env:
         PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
         APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
