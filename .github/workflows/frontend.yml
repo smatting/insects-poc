@@ -1,4 +1,4 @@
-name: "Build"
+name: "Frontend"
 on:
   pull_request:
   push:
@@ -16,7 +16,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: dist
-        path: dist
+        path: frontend/dist
 
   deploy-app-develop:
     name: Deploy frontend (develop)
