@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: develop
     outputs:
-      image_id: ${{ steps.build_image.outputs.image_id }}
+      image_id: ${{ steps.repot_docker_image.outputs.repot_image_id }}
     steps:
     - uses: actions/checkout@v2.3.4
     - uses: cachix/install-nix-action@v13
@@ -35,8 +35,11 @@ jobs:
         docker tag ${{ steps.build_image.outputs.image_id }} gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
         docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
     - name: show docker image name
+      id: repot_docker_image
       run: |
-        docker inspect --format='{{index .Id}}' gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
+        repot_image_id=$(docker inspect --format='{{index .RepoDigests 0}}' gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv | sed -n 's/.*@\(.*\)/\1/p')
+        echo "::set-output name=repot_image_id::$repot_image_id"
+
 
   deploy_backend:
     name: Deploy Backend
