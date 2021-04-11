@@ -1,10 +1,10 @@
-name: "Build"
+name: "Backend"
 on:
   pull_request:
   push:
 jobs:
   build-backend:
-    name: Build frontend
+    name: Build docker image
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
