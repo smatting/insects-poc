@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
 jobs:
-  build-backend:
+  build_backend:
     name: Build and push docker image
     runs-on: ubuntu-latest
     environment: develop
@@ -31,22 +31,21 @@ jobs:
     - name: docker push
       run: |
         echo ${{ steps.token_step.outputs.token }} | docker login -u oauth2accesstoken --password-stdin https://gcr.io
-        docker tag ${{ steps.build_image.outputs.image_id }} gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
+        docker tag ${{ steps.token_step.outputs.token }} gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
         docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
     - name: show docker image name
       run: |
         docker inspect --format='{{index .Id}}' gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
 
-
-  # deploy-backend:
-  #   name: Deploy Backend
-  #   if: "${{github.ref == 'refs/heads/main'}}"
-  #   needs: build-backend
-  #   steps:
-  #   - name: gcloud deploy
-  #     uses: actions-hub/gcloud@master
-  #     with:
-  #       args: run deploy --platform managed --region europe-west3 srv --image gcr.io/graphic-iridium-310322/${{ secrets.GCLOUD_PROJECT_ID }}/
-  #     env:
-  #         PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
-  #         APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
+  deploy_backend:
+    name: Deploy Backend
+    if: "${{github.ref == 'refs/heads/main'}}"
+    needs: build_backend
+    steps:
+    - name: gcloud deploy
+      uses: actions-hub/gcloud@master
+      with:
+        args: run deploy --platform managed --region europe-west3 srv --image ${{ jobs.build_backend.outputs.image_id }}
+      env:
+        PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+        APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
