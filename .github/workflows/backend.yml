@@ -9,10 +9,10 @@ jobs:
     environment: develop
     steps:
     - uses: actions/checkout@v2.3.4
-    - name: gcloud auth activate-service-account
+    - name: gcr.io login
       uses: actions-hub/gcloud@master
       with:
-        args: auth activate-service-account ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+        args: "auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io"
       env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
