@@ -3,3 +3,4 @@ dist/*.js
 .envrc
 **/result
 **/__pycache__
+**/*.egg-info

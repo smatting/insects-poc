@@ -1,4 +1,4 @@
-{ lib, buildPythonPackage, flask }:
+{ lib, buildPythonPackage, flask, ipython, ipdb }:
 
 buildPythonPackage {
   pname = "srv";
@@ -6,7 +6,7 @@ buildPythonPackage {
 
   src = lib.sourceByRegex ./. [
     "^.*\\.nix$"
-    ".*"
+    "srv/.*"
     "^result"
     "^.*\\.md$"
     "LICENSE"
@@ -14,4 +14,5 @@ buildPythonPackage {
 
   checkInputs = [ ];
   propagatedBuildInputs = [ flask ];
+  buildInputs = [ ipython ipdb ];
 }
