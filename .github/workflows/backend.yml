@@ -4,10 +4,6 @@ on:
   push:
 jobs:
   build-backend:
-    name: Build and push docker image
-    runs-on: ubuntu-latest
-    environment: develop
-    steps:
     - uses: actions/checkout@v2.3.4
     - uses: cachix/install-nix-action@v13
       with:
@@ -18,16 +14,32 @@ jobs:
         ./buildimage.sh
     - name: gcr.io login
       uses: actions-hub/gcloud@master
+      id: token_step
       with:
-        args: "auth print-access-token > token.txt"
+        args: "auth print-access-token | bash -c 'read token; ::set-output name=action_fruit::$token'"
       env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
     - name: docker push
       run: |
-        cat token.txt | docker login -u oauth2accesstoken --password-stdin https://gcr.io
+        echo ${{ steps.token_step.outputs.token }} | docker login -u oauth2accesstoken --password-stdin https://gcr.io
         docker tag srv:latest gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
         docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
         rm -f token.txt
     - name: show docker image name
-      run: docker inspect --format='{{index .RepoDigests 0}}' gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
+      run: |
+        docker inspect --format='{{index .Id}}' gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
+
+
+  # deploy-backend:
+  #   name: Deploy Backend
+  #   if: "${{github.ref == 'refs/heads/main'}}"
+  #   needs: build-backend
+  #   steps:
+  #   - name: gcloud deploy
+  #     uses: actions-hub/gcloud@master
+  #     with:
+  #       args: run deploy --platform managed --region europe-west3 srv --image gcr.io/graphic-iridium-310322/${{ secrets.GCLOUD_PROJECT_ID }}/
+  #     env:
+  #         PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+  #         APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
