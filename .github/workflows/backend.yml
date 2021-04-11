@@ -9,21 +9,28 @@ jobs:
     environment: develop
     steps:
     - uses: actions/checkout@v2.3.4
-    - uses: cachix/install-nix-action@v13
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
-    - name: build image
-      run: |
-        cd backend
-        ./buildimage.sh
-    - name: gcloud auth configure-docker
+    - name: gcloud auth activate-service-account
       uses: actions-hub/gcloud@master
+      with:
+        args: auth activate-service-account
       env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
-      with:
-        args: auth configure-docker
-    - name: docker push
-      run: |
-        docker tag srv:latest gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
-        docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
+    # - uses: cachix/install-nix-action@v13
+    #   with:
+    #     nix_path: nixpkgs=channel:nixos-unstable
+    # - name: build image
+    #   run: |
+    #     cd backend
+    #     ./buildimage.sh
+    # - name: gcloud auth configure-docker
+    #   uses: actions-hub/gcloud@master
+    #   env:
+    #       PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+    #       APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
+    #   with:
+    #     args: auth configure-docker
+    # - name: docker push
+    #   run: |
+    #     docker tag srv:latest gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
+    #     docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
