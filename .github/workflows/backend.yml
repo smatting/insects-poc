@@ -15,7 +15,6 @@ jobs:
     - run: cd backend; ./buildimage.sh
     - name: gcloud info
       uses: actions-hub/gcloud@master
-      environment: develop
       env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
