@@ -6,6 +6,7 @@ jobs:
   build-backend:
     name: Build and push docker image
     runs-on: ubuntu-latest
+    environment: develop
     steps:
     - uses: actions/checkout@v2.3.4
     - uses: cachix/install-nix-action@v13
@@ -22,7 +23,6 @@ jobs:
         args: info
     - name: gcloud auth configure-docker
       uses: actions-hub/gcloud@master
-      environment: develop
       env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
