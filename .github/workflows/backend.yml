@@ -39,6 +39,7 @@ jobs:
 
   deploy_backend:
     name: Deploy Backend
+    runs-on: ubuntu-latest
     if: "${{github.ref == 'refs/heads/main'}}"
     needs: build_backend
     steps:
