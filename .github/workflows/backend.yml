@@ -4,7 +4,7 @@ on:
   push:
 jobs:
   build-backend:
-    name: Build docker image
+    name: Build and push docker image
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
@@ -12,3 +12,19 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: 'cd backend; ./buildimage.sh'
+    - name "gcloud info"
+      uses: actions-hub/gcloud@master
+      environment: develop
+      env:
+          PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
+      with:
+        args: info
+    - name "gcloud auth configure-docker"
+      uses: actions-hub/gcloud@master
+      environment: develop
+      env:
+          PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
+      with:
+        args: auth configure-docker
