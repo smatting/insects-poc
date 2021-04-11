@@ -29,3 +29,5 @@ jobs:
         docker tag srv:latest gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
         docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
         rm -f token.txt
+    - name: show docker image name
+      run: docker inspect --format='{{index .RepoDigests 0}}' gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
