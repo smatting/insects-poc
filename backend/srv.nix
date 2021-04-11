@@ -6,13 +6,18 @@ buildPythonPackage {
 
   src = lib.sourceByRegex ./. [
     "^.*\\.nix$"
-    "srv/.*"
+    ".*"
     "^result"
     "^.*\\.md$"
     "LICENSE"
     ];
 
   checkInputs = [ ];
-  propagatedBuildInputs = [ flask ];
-  buildInputs = [ ipython ipdb ];
+  propagatedBuildInputs = [
+    flask
+  ];
+  buildInputs = [
+    ipython
+    ipdb
+  ];
 }
