@@ -20,7 +20,7 @@ jobs:
       uses: actions-hub/gcloud@master
       id: token_step
       with:
-        args: "auth print-access-token | bash -c 'read token; ::set-output name=action_fruit::$token'"
+        args: "auth print-access-token | bash -c 'read token; echo ::set-output name=token::$token'"
       env:
           PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
