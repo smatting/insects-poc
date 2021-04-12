@@ -29,8 +29,8 @@ jobs:
       - name: Push Docker image
         run: docker push $IMAGE_NAME
 
-      # - name: Deploy Docker image
-      #   run: gcloud run deploy srv --image $IMAGE_NAME --region europe-west3 --platform managed
+      - name: Deploy Docker image
+        run: gcloud run deploy srv --image $IMAGE_NAME --region europe-west3 --platform managed
 
   # deploy_backend:
   #   name: Deploy Backend
