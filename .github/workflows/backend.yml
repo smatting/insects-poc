@@ -31,18 +31,3 @@ jobs:
 
       - name: Deploy Docker image
         run: gcloud run deploy srv --image $IMAGE_NAME --region europe-west3 --platform managed
-
-  # deploy_backend:
-  #   name: Deploy Backend
-  #   runs-on: ubuntu-latest
-  #   if: "${{github.ref == 'refs/heads/main'}}"
-  #   needs: build_backend
-  #   environment: develop
-  #   steps:
-  #     - name: gcloud deploy
-  #       uses: actions-hub/gcloud@master
-  #       with:
-  #         args: run deploy --platform managed --region europe-west3 srv --image gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv@${{ needs.build_backend.outputs.image_id }}
-  #       env:
-  #         PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
-  #         APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
