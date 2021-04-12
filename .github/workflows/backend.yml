@@ -7,50 +7,42 @@ jobs:
     name: Build and push docker image
     runs-on: ubuntu-latest
     environment: develop
+    env:
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/srv
     outputs:
       image_id: ${{ steps.repot_docker_image.outputs.repot_image_id }}
     steps:
-      - uses: actions/checkout@v2.3.4 # checks out the repro
-      - uses: cachix/install-nix-action@v13 # install nix
+      - name: Login
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      - name: build image
-        id: build_image
-        run: |
-          cd backend
-          image_id=$(./buildimage.sh)
-          echo "::set-output name=image_id::$image_id"
-      - name: gcr.io login
-        uses: actions-hub/gcloud@master
-        id: token_step
-        with:
-          args: "auth print-access-token | bash -c 'read token; echo ::set-output name=token::$token'"
-        env:
-          PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
-          APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
-      - name: docker push
-        run: |
-          set -x
-          echo ${{ steps.token_step.outputs.token }} | docker login -u oauth2accesstoken --password-stdin https://gcr.io
-          docker tag ${{ steps.build_image.outputs.image_id }} gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
-          docker push gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
-      - name: show docker image name
-        id: repot_docker_image
-        run: |
-          repot_image_id=$(docker inspect --format='{{index .RepoDigests 0}}' gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv | sed -n 's/.*@\(.*\)/\1/p')
-          echo "::set-output name=repot_image_id::$repot_image_id"
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
 
-  deploy_backend:
-    name: Deploy Backend
-    runs-on: ubuntu-latest
-    if: "${{github.ref == 'refs/heads/main'}}"
-    needs: build_backend
-    environment: develop
-    steps:
-      - name: gcloud deploy
-        uses: actions-hub/gcloud@master
-        with:
-          args: run deploy --platform managed --region europe-west3 srv --image gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv@${{ needs.build_backend.outputs.image_id }}
-        env:
-          PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
-          APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -f backend/docker/app.Dockerfile -t $IMAGE_NAME backend/.
+
+      - name: Push Docker image
+        run: docker push $IMAGE_NAME
+
+      # - name: Deploy Docker image
+      #   run: gcloud run deploy srv --image $IMAGE_NAME --region europe-west3 --platform managed
+
+  # deploy_backend:
+  #   name: Deploy Backend
+  #   runs-on: ubuntu-latest
+  #   if: "${{github.ref == 'refs/heads/main'}}"
+  #   needs: build_backend
+  #   environment: develop
+  #   steps:
+  #     - name: gcloud deploy
+  #       uses: actions-hub/gcloud@master
+  #       with:
+  #         args: run deploy --platform managed --region europe-west3 srv --image gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv@${{ needs.build_backend.outputs.image_id }}
+  #       env:
+  #         PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+  #         APPLICATION_CREDENTIALS: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
