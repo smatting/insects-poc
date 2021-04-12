@@ -8,14 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: develop
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/srv
+      IMAGE_NAME: gcr.io/${{ secrets.GCLOUD_PROJECT_ID }}/srv
     outputs:
       image_id: ${{ steps.repot_docker_image.outputs.repot_image_id }}
     steps:
       - name: Login
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
           service_account_key: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
