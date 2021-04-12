@@ -16,4 +16,6 @@ ADD models ./models
 
 COPY start_backend.sh .
 
+EXPOSE $PORT
+
 CMD ["./start_backend.sh"]
