@@ -1,4 +1,13 @@
 from setuptools import setup, find_packages
+import sys
+import os.path
+
+
+def load_requirements(filename='requirements.txt'):
+    with open(filename) as f:
+        lines = f.readlines()
+    return lines
+
 
 setup(
     name='srv',
@@ -8,5 +17,5 @@ setup(
     author_email='author@gmail.com',
     description='Description of my package',
     packages=find_packages(),
-    install_requires=['flask'],
+    install_requires=load_requirements(),
 )

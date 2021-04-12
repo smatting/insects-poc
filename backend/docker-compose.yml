@@ -1,0 +1,31 @@
+version: "3.3"
+services:
+  jupyter:
+    image: jupyter
+    build:
+      dockerfile: docker/jupyter.Dockerfile
+      context: .
+    volumes:
+      - ./data:/app/data
+      - ./srv:/app/srv
+      - ./notebooks:/app/notebooks
+      - ./models:/app/models
+    ports:
+      - "8000:8000"
+  devapp:
+    image: devapp
+    build:
+      dockerfile: docker/devapp.Dockerfile
+      context: .
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    ports:
+      - "5000:5000"
+  app:
+    image: app
+    build:
+      dockerfile: docker/app.Dockerfile
+      context: .
+    ports:
+      - "5001:5000"
