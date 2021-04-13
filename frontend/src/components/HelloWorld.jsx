@@ -1,5 +1,7 @@
-import React from 'react';
+import React from "react";
 
-export function HelloWorld(props) {
-  return <h1>Hello, {props.name || 'World!!'}!</h1>;
-}
+const HelloWorld = (props) => {
+  return <h1>Hello, {props.name || "Frontend!!"}!</h1>;
+};
+
+export default HelloWorld;
