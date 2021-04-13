@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 from flask import Flask
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def hello():
-    return "Hello, Flask! Deployment worked again"
+    return {"name": "backend"}

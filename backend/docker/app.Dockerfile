@@ -14,7 +14,7 @@ RUN pip install --no-deps .
 
 ADD models ./models
 
-COPY start_backend.sh .
+COPY scripts/start_backend.sh .
 
 EXPOSE $PORT
 

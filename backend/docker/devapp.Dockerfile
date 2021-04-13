@@ -1,5 +1,7 @@
 FROM python:3.8
 
+RUN apt-get update && apt-get install inotify-tools -y
+
 WORKDIR /app
 
 COPY requirements.txt .
@@ -12,6 +14,6 @@ COPY setup.py .
 
 RUN pip install --no-deps .
 
-COPY start_backend.sh .
+COPY scripts/start_devbackend.sh .
 
-CMD ["./start_backend.sh"]
+CMD ["./start_devbackend.sh"]
