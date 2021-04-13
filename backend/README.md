@@ -1,9 +1,7 @@
 # Insects backend
 
-## Local development
-
-Start jupyter
+## Development
 
 ```
-
+docker-compose up
 ```
