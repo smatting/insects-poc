@@ -12,7 +12,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "15"
-      - run: "echo $BACKEND_URL; cd frontend; npm install; npm run build"
+      - uses: actions/cache@v1
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-js-${{ hashFiles('frontend/package-lock.json') }}
+      - run: "echo $BACKEND_URL; cd frontend; npm install --only=prod; npm run build"
         env:
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
       - uses: actions/upload-artifact@v2
@@ -31,16 +35,12 @@ jobs:
         with:
           name: dist # artifact
           path: dist # to folder
-      - uses: jakejarvis/s3-sync-action@master
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          args: --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-central-1
-          SOURCE_DIR: dist
-          DEST_DIR: app-develop
+          version: "276.0.0"
+          GCP_PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_APPLICATION_CREDENTIALS }}
+      - run: gsutil -m rsync -d -c -r dist gs://insects-poc-frontend-develop
 
   deploy-app:
     name: Deploy app
