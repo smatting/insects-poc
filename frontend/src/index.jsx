@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import HelloWorld from "./components/HelloWorld";
+import SketchCanvas from "./components/SketchCanvas";
 
 const App = () => {
   const [error, setError] = useState(null);
@@ -35,7 +36,12 @@ const App = () => {
   } else if (!isLoaded) {
     return <div>Loading...</div>;
   } else {
-    return <HelloWorld name={response.name} />;
+    return (
+      <>
+        <HelloWorld name={response.name} />
+        <SketchCanvas />
+      </>
+    );
   }
 };
 
