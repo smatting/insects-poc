@@ -12,6 +12,8 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - run: 'cd frontend; nix-shell --run "npm install; npm run build"'
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
       - uses: actions/upload-artifact@v2
         with:
           name: dist # artifact
