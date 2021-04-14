@@ -4,8 +4,8 @@
     "description": "Minimal React + Babel + Webpack template",
     "main": "webpack.config.js",
     "scripts": {
-        "build": "webpack --mode production",
-        "watch": "webpack --mode development --watch",
+        "build": "webpack --mode production --env BACKEND_URL=$BACKEND_URL",
+        "watch": "webpack --mode development --watch --env BACKEND_URL=http://localhost:5000",
         "serve": "webpack serve --env BACKEND_URL=http://localhost:5000"
     },
     "author": "Stefan Matting",
