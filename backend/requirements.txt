@@ -3,3 +3,5 @@ pandas
 numpy
 gunicorn
 flask-cors
+torch
+torchvision

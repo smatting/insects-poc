@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
+pip install -e --no-deps .
+
+flask run --help
+
 while true; do
-  gunicorn --bind=0.0.0.0:${PORT} --workers=2 srv.app:app &
+  python srv/app.py &
   PID=$!
   inotifywait -r models srv/*.py
   echo "Restart backend."

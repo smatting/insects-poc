@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-import HelloWorld from "./components/HelloWorld";
 import SketchCanvas from "./components/SketchCanvas";
 
 const App = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [response, setResponse] = useState([]);
+  const [imgPNG, setImgPNG] = useState(null);
 
-  // Note: the empty deps array [] means
-  // this useEffect will run once
-  // similar to componentDidMount()
   useEffect(() => {
     console.log(process.env.BACKEND_URL);
     fetch(process.env.BACKEND_URL)
@@ -19,17 +16,33 @@ const App = () => {
       .then(
         (result) => {
           setIsLoaded(true);
-          setResponse(result);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           setIsLoaded(true);
           setError(error);
         }
       );
   }, []);
+
+  useEffect(() => {
+    console.log(process.env.BACKEND_URL);
+    console.log("detect", imgPNG);
+    fetch(process.env.BACKEND_URL + "/detect", {
+      method: "POST",
+      body: JSON.stringify({ img: imgPNG }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setResponse(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, [imgPNG]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -38,8 +51,7 @@ const App = () => {
   } else {
     return (
       <>
-        <HelloWorld name={response.name} />
-        <SketchCanvas />
+        <SketchCanvas updateImage={setImgPNG} />
       </>
     );
   }

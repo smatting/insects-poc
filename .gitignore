@@ -4,3 +4,6 @@ dist/*.js
 **/result
 **/__pycache__
 **/*.egg-info
+*.Trash*
+*.ipynb_checkpoints
+backend/notebooks/data

@@ -16,7 +16,7 @@ const debounce = (func, timeout = 300) => {
   };
 };
 
-const Canvas = () => {
+const Canvas = ({ updateImage }) => {
   const canvas = useRef(null);
   const [eraser, setEraser] = useState(false);
 
@@ -25,14 +25,14 @@ const Canvas = () => {
   }, [eraser]);
 
   const exportImage = () => {
-    console.log("export");
     canvas.current
       .exportImage("png")
       .then((data) => {
-        console.log(data);
+        updateImage(data);
       })
       .catch((e) => {
         console.log(e);
+        updateImage(data);
       });
   };
 
